@@ -22,7 +22,7 @@ module Parse
       new(response, client)
     end
 
-    def self.post_authenticate(username, password, client = nil, auth_uri = nil)
+    def self.post_authenticate(username, password, auth_uri, client = nil)
       body = {
           'username' => username,
           'password' => password
