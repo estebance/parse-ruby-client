@@ -22,7 +22,7 @@ module Parse
       new(response, client)
     end
 
-    def self.alt_authenticate(auth_uri, username, password, client = nil)
+    def self.post_authenticate(username, password, client = nil, auth_uri = nil)
       body = {
           'username' => username,
           'password' => password
@@ -32,8 +32,6 @@ module Parse
       response = client.request(auth_uri, :post , nil, body)
       response = response['result']
       client.session_token = response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
-      puts 'token'
-      puts response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
       new(response, client)
     end
 
