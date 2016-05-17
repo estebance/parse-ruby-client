@@ -8,17 +8,18 @@ module Parse
   # A Parse User
   # https://parse.com/docs/rest/guide/#users
   class User < Parse::Object
-    def self.authenticate(username, password, client = nil)
+    def self.authenticate(auth_uri, username, password, client = nil)
       body = {
         'username' => username,
         'password' => password
       }
 
       client ||= Parse.client
-      response = client.request(
-        Parse::Protocol::USER_LOGIN_URI, :get, nil, body)
+      response = client.request(auth_uri, :post , nil, body)
+      puts response
       client.session_token = response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
-
+      puts 'token'
+      puts response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
       new(response, client)
     end
 

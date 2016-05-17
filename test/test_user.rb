@@ -19,7 +19,7 @@ class TestUser < ParseTestCase
   def test_user_login
     VCR.use_cassette('test_user_login') do
       data = { username: 'alan4300606921361@gmail.com', password: 'secret' }
-      user = Parse::User.authenticate(data[:username], data[:password], @client)
+      user = Parse::User.authenticate(Parse::Protocol::USER_LOGIN_URI, data[:username], data[:password], @client)
 
       assert_equal data[:username], user['username']
       assert user['sessionToken'].is_a?(String)
