@@ -8,20 +8,35 @@ module Parse
   # A Parse User
   # https://parse.com/docs/rest/guide/#users
   class User < Parse::Object
-    def self.authenticate(auth_uri, username, password, client = nil)
+    def self.authenticate(username, password, client = nil)
       body = {
         'username' => username,
         'password' => password
       }
 
       client ||= Parse.client
+      response = client.request(
+        Parse::Protocol::USER_LOGIN_URI, :get, nil, body)
+      client.session_token = response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
+
+      new(response, client)
+    end
+
+    def self.alt_authenticate(auth_uri, username, password, client = nil)
+      body = {
+          'username' => username,
+          'password' => password
+      }
+
+      client ||= Parse.client
       response = client.request(auth_uri, :post , nil, body)
-      puts response
+      response = response['result']
       client.session_token = response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
       puts 'token'
       puts response[Parse::Protocol::KEY_USER_SESSION_TOKEN]
       new(response, client)
     end
+
 
     def self.reset_password(email, client = nil)
       client ||= Parse.client
